@@ -1,13 +1,16 @@
 {
 	"name": "DiscoCal",
-	"version": "1.0.0",
-	"description": "Creates Outlook calendar events from dicord text messages",
+	"version": "0.1.0",
+	"description": "Discord bot for simple event creation",
 	"main": "bot.js",
 	"author": "Joe Flint & Daniel Leclair",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/GyroJoe/DiscoCal.git"
+	},
 	"dependencies": {
-		"discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
 		"discord.js": "^11.4.2",
-		"discord.js-commando": "^0.10.0",
-		"winston": "^3.2.1"
+		"discord.js-commando": "^0.10.0"
 	}
 }

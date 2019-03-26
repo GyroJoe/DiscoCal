@@ -1,7 +1,8 @@
 "use strict";
 
 const Commando = require('discord.js-commando');
-const auth = require('./auth.json')
+const auth = require('./auth.json');
+const path = require('path');
 
 const client = new Commando.Client({
     owner: [
@@ -11,6 +12,8 @@ const client = new Commando.Client({
 });
 
 client.registry
-    .registerDefaults();
+    .registerDefaults()
+    .registerGroup('calendar', 'Calendar')
+    .registerCommandsIn(path.join(__dirname, 'commands'));
 
 client.login(auth.token);

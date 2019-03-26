@@ -33,6 +33,8 @@ class TextDateExtractor {
             dates.push(date)
         });
 
+        dates.reverse();
+
         return { title: title.trim(), dates: dates };
     }
 };

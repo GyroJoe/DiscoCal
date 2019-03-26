@@ -10,6 +10,7 @@
 		"url": "https://github.com/GyroJoe/DiscoCal.git"
 	},
 	"dependencies": {
+		"chrono-node": "^1.3.11",
 		"discord.js": "^11.4.2",
 		"discord.js-commando": "^0.10.0"
 	}

@@ -14,6 +14,7 @@ const client = new Commando.Client({
 client.registry
     .registerDefaults()
     .registerGroup('calendar', 'Calendar')
+    .registerTypesIn(path.join(__dirname, 'types'))
     .registerCommandsIn(path.join(__dirname, 'commands'));
 
 client.login(auth.token);

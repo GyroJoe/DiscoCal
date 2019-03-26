@@ -11,15 +11,17 @@ class TextDateString extends Commando.ArgumentType {
     }
 
     validate(val, msg, arg) {
-        if (!this.extractor.extract(val)) {
+        var result = this.extractor.extract(val, msg.createdAt);
+        if (result == null) {
             return "Unable to determine date information from input, please try again.";
         }
 
         return true;
     }
     
-    parse(val) {
-        return val;
+    parse(val, msg) {
+        var result = this.extractor.extract(val, msg.createdAt);
+        return result;
     }
 };
 

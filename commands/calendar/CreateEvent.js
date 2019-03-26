@@ -13,7 +13,8 @@ module.exports = class CreateEventCommand extends Commando.Command {
 
             args: [
                 {
-                    key: 'text',
+                    key: 'eventDescription',
+                    label: "event description",
                     prompt: 'Describe your event',
                     type: 'textdatestring'
                 }
@@ -21,7 +22,7 @@ module.exports = class CreateEventCommand extends Commando.Command {
         });
     }
 
-    run(msg, { text }) {
-        return msg.reply(`Hello Commando! ${text}`);
+    run(msg, { eventDescription }) {
+        return msg.reply(`Hello Commando! "${eventDescription.title}", ${eventDescription.dates.map(v => v.start)}`);
     }
 };

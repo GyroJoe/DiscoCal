@@ -17,15 +17,23 @@ class TextDateExtractor {
         results.slice().reverse().forEach(result => {
             title = title.substring(0, result.index) + title.substring(result.index + result.text.length);
 
-            var date = { start: result.start.date() };
-            if (result.end) {
-                date.end = result.end.date();
+            var start = result.start;
+            var end = result.end;
+
+            var date = { 
+                start: start.date(),
+                isAllDay: (!start.isCertain('hour') && start.get('hour') == 12) ||
+                          (end && !end.isCertain('hour') && end.get('hour') == 12)
+            };
+
+            if (end) {
+                date.end = end.date();
             }
 
             dates.push(date)
         });
 
-        return { title: title, dates: dates };
+        return { title: title.trim(), dates: dates };
     }
 };
 

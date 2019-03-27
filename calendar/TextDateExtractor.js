@@ -1,12 +1,14 @@
 "use strict";
 
-const Chrono = require('chrono-node');
+const chrono = require('chrono-node');
 const OrdinalDateParser = require('../calendar/OrdinalDateParser');
+const RelativeWeekdayRefiner = require('../calendar/RelativeWeekdayRefiner');
 
 class TextDateExtractor {
     constructor() {
-        this.chrono = new Chrono.Chrono();
+        this.chrono = new chrono.Chrono();
         this.chrono.parsers.push(new OrdinalDateParser());
+        this.chrono.refiners.push(new RelativeWeekdayRefiner());
     }
 
     extract(text, referenceDate) {

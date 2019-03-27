@@ -3,7 +3,7 @@
 const chrono = require('chrono-node');
 const moment = require('moment');
 
-const PATTERN = /(\W|^)(\d{1,2})(st|nd|rd|th)(?=\W|$)/i;
+const PATTERN = /(\W|^)(\d{1,2})(st|nd|rd|th)\s*\,?(?=\W|$)/i;
 
 function InvalidOrdinalDateRefiner() {
     chrono.Refiner.apply(this, arguments);

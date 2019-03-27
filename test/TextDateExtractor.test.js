@@ -9,6 +9,11 @@ test('simple date', () => {
     validateMessage(message, "Out", [{ isAllDay: true, start: { m: 9, d: 11, y: 2018 } }]);
 });
 
+test('simple ordinal date', () => {
+    var message = { Date: "26-Mar-19", Content: "I'm out on the 1st" };
+    validateMessage(message, "I'm out on the", [{ isAllDay: true, start: { m: 4, d: 1, y: 2019 } }]);
+});
+
 test('two dates', () => {
     var message = { Date: "10-Jul-17", Content: "going to be out 7/11 and 7/13 traveling"};
     validateMessage(message, "going to be out and traveling", [
@@ -38,6 +43,16 @@ test('relative week', () => {
 test('relative future week', () => {
     var message = { Date: "27-Mar-19", Content: "I'm out next week" };
     validateMessage(message, "I'm out", [{ isAllDay: true, start: { m: 4, d: 3, y: 2019 } }]);
+});
+
+test('multiple ordinal dates', () => {
+    var message = { Date: "14-Dec-16", Content: "I'm out 20th, 22nd, 27th and the 29th" };
+    validateMessage(message, "I'm out and the", [
+        { isAllDay: true, start: { m: 12, d: 20, y: 2016 } },
+        { isAllDay: true, start: { m: 12, d: 22 } },
+        { isAllDay: true, start: { m: 12, d: 27 } },
+        { isAllDay: true, start: { m: 12, d: 29 } },
+    ]);
 });
 
 function validateMessage(message, title, expectedDates) {

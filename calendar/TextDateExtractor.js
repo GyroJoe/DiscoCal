@@ -1,10 +1,16 @@
 "use strict";
 
 const Chrono = require('chrono-node');
+const OrdinalDateParser = require('../calendar/OrdinalDateParser');
 
 class TextDateExtractor {
+    constructor() {
+        this.chrono = new Chrono.Chrono();
+        this.chrono.parsers.push(new OrdinalDateParser());
+    }
+
     extract(text, referenceDate) {
-        var results = Chrono.parse(text, referenceDate);
+        var results = this.chrono.parse(text, referenceDate, { forwardDate: true });
 
         console.log(results);
 

@@ -45,6 +45,23 @@ test('relative future week', () => {
     validateMessage(message, "I'm out", [{ isAllDay: true, start: { m: 4, d: 3, y: 2019 } }]);
 });
 
+test('simple relative week day chaining', () => {
+    var message = { Date: "26-Mar-19", Content: "I'm out next tuesday and thursday" };
+    validateMessage(message, "I'm out  and", [
+        { isAllDay: true, start: { m: 4, d: 2, y: 2019 } },
+        { isAllDay: true, start: { m: 4, d: 4 } },
+    ]);
+});
+
+test('complex relative week day chaining', () => {
+    var message = { Date: "26-Mar-19", Content: "I'm out thursday and also next tuesday and thursday" };
+    validateMessage(message, "I'm out  and also  and", [
+        { isAllDay: true, start: { m: 3, d: 28, y: 2019 } },
+        { isAllDay: true, start: { m: 4, d: 2 } },
+        { isAllDay: true, start: { m: 4, d: 4 } },
+    ]);
+});
+
 test('multiple ordinal dates', () => {
     var message = { Date: "14-Dec-16", Content: "I'm out 20th, 22nd, 27th and the 29th" };
     validateMessage(message, "I'm out and the", [

@@ -36,9 +36,19 @@ class TextDateExtractor {
             let start = result.start;
             let end = result.end;
 
+            let isAllDay = treatAsAllDay(result, start) || treatAsAllDay(result, end);
+
+            if (isAllDay) {
+                // Adjust all-day dates to have consistent midnight times
+                adjustAllDayDate(result.start);
+                if (result.end) {
+                    adjustAllDayDate(result.end);
+                }
+            }
+
             let date = { 
                 start: start.date(),
-                isAllDay: treatAsAllDay(result, start) || treatAsAllDay(result, end)
+                isAllDay: isAllDay
             };
 
             if (end) {
@@ -97,6 +107,12 @@ function treatAsAllDay(result, parsedDate) {
     }
 
     return false;
+}
+
+function adjustAllDayDate(date) {
+    date.assign('hour', 12);
+    date.assign('minute', 0);
+    date.assign('second', 0);
 }
 
 module.exports = TextDateExtractor;

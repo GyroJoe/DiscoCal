@@ -101,6 +101,13 @@ test('duration reference', () => {
     ]);
 });
 
+test('tonight all day', () => {
+    var message = { Date: "14-Dec-16", Content: "Out tonight (Dec 14)" };
+    validateMessage(message, "Out  ()", [
+        { isAllDay: true, start: { m: 12, d: 14, y: 2016 } },
+    ]);
+});
+
 function validateMessage(message, title, expectedDates) {
     var results = extractor.extract(message.Content, Date.parse(message.Date));
 

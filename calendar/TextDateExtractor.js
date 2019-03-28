@@ -35,7 +35,9 @@ class TextDateExtractor {
                 date.end = end.date();
             }
 
-            dates.push(date)
+            if (dates.findIndex(otherDate => compareDates(date, otherDate)) == -1) {
+                dates.push(date);
+            }
         });
 
         dates.reverse();
@@ -43,6 +45,27 @@ class TextDateExtractor {
         return { title: title.trim(), dates: dates };
     }
 };
+
+function compareDates(date, otherDate) {
+    if (date.start.getTime() != otherDate.start.getTime()) {
+        return false;
+    }
+
+    if ((date.end === undefined) != (otherDate.end === undefined)) {
+        return false;
+    }
+
+    if (date.end && otherDate.end &&
+        date.end.getTime() != otherDate.end.getTime()) {
+        return false;
+    }
+
+    if (date.isAllDay != otherDate.isAllDay) {
+        return false;
+    }
+
+    return true;
+}
 
 function treatAsAllDay(result, parsedDate) {
     if (!parsedDate) {

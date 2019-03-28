@@ -35,6 +35,13 @@ test('two dates with commas', () => {
     ]);
 });
 
+test('duplicate dates', () => {
+    var message = { Date: "16-Dec-16", Content: "I'm out 12/20, 12/20" };
+    validateMessage(message, "I'm out", [
+        { isAllDay: true, start: { m: 12, d: 20, y: 2016 } },
+    ]);
+})
+
 test('relative date', () => {
     var message = { Date: "26-Mar-19", Content: "I'm out this tuesday" };
     validateMessage(message, "I'm out", [{ isAllDay: true, start: { m: 3, d: 26, y: 2019 } }]);

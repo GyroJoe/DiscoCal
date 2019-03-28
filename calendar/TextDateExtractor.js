@@ -9,6 +9,16 @@ class TextDateExtractor {
         this.chrono = new chrono.Chrono();
         this.chrono.parsers.push(new OrdinalDateParser());
         this.chrono.refiners.push(new RelativeWeekdayRefiner());
+
+        this.chrono.parsers = this.chrono.parsers.filter(parser => {
+            // Remove 'ago' and 'later' parsers as they tend to think strings like "30 mins" are dates.
+            if (parser instanceof chrono.parser.ENTimeAgoFormatParser ||
+                parser instanceof chrono.parser.ENTimeLaterFormatParser) {
+                return false;
+            }
+
+            return true;
+        });
     }
 
     extract(text, referenceDate) {

@@ -94,6 +94,13 @@ test('multiple ordinal dates', () => {
     ]);
 });
 
+test('duration reference', () => {
+    var message = { Date: "14-Dec-16", Content: "Present delivery 10 mins late on 12/25" };
+    validateMessage(message, "Present delivery 10 mins late on", [
+        { isAllDay: true, start: { m: 12, d: 25, y: 2016 } },
+    ]);
+});
+
 function validateMessage(message, title, expectedDates) {
     var results = extractor.extract(message.Content, Date.parse(message.Date));
 

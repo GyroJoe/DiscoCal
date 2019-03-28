@@ -3,11 +3,12 @@
 const chrono = require('chrono-node');
 const OrdinalDateParser = require('../calendar/OrdinalDateParser');
 const RelativeWeekdayRefiner = require('../calendar/RelativeWeekdayRefiner');
+const OrderFixupRefiner = require('../calendar/OrderFixupRefiner');
 
 class TextDateExtractor {
     constructor() {
-        let enCasual = chrono.options.en.casual();
-        enCasual.parsers = enCasual.parsers.filter(parser => {
+        let options = chrono.options.casualOption();
+        options.parsers = options.parsers.filter(parser => {
             // Remove 'ago' and 'later' parsers as they tend to think strings like "30 mins" are dates.
             if (parser instanceof chrono.parser.ENTimeAgoFormatParser ||
                 parser instanceof chrono.parser.ENTimeLaterFormatParser) {
@@ -17,10 +18,12 @@ class TextDateExtractor {
             return true;
         });
 
-        this.chrono = new chrono.Chrono(chrono.options.mergeOptions([
-            enCasual,
-            { parsers: [ new OrdinalDateParser() ], refiners: [new RelativeWeekdayRefiner()] },
-            chrono.options.commonPostProcessing]));
+        options.parsers.push(new OrdinalDateParser());
+
+        options.refiners.unshift(new OrderFixupRefiner(options.parsers));
+        options.refiners.push(new RelativeWeekdayRefiner());
+
+        this.chrono = new chrono.Chrono(options);
     }
 
     extract(text, referenceDate) {

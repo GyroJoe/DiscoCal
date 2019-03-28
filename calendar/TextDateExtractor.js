@@ -12,26 +12,23 @@ class TextDateExtractor {
     }
 
     extract(text, referenceDate) {
-        var results = this.chrono.parse(text, referenceDate, { forwardDate: true });
-
-        console.log(results);
+        let results = this.chrono.parse(text, referenceDate, { forwardDate: true });
 
         if (results.length == 0) {
             return null;
         }
 
-        var title = text;
-        var dates = [];
+        let title = text;
+        let dates = [];
         results.slice().reverse().forEach(result => {
             title = title.substring(0, result.index) + title.substring(result.index + result.text.length);
 
-            var start = result.start;
-            var end = result.end;
+            let start = result.start;
+            let end = result.end;
 
-            var date = { 
+            let date = { 
                 start: start.date(),
-                isAllDay: (!start.isCertain('hour') && start.get('hour') == 12) ||
-                          (end && !end.isCertain('hour') && end.get('hour') == 12)
+                isAllDay: treatAsAllDay(result, start) || treatAsAllDay(result, end)
             };
 
             if (end) {
@@ -46,5 +43,27 @@ class TextDateExtractor {
         return { title: title.trim(), dates: dates };
     }
 };
+
+function treatAsAllDay(result, parsedDate) {
+    if (!parsedDate) {
+        return false;
+    }
+
+    if (parsedDate.isCertain('hour')) {
+        return false;
+    }
+
+    if (parsedDate.get('hour') == 12) {
+        return true;
+    }
+
+    // Chrono defaults 'tonight' to be 10pm. Treat this as all-day.
+    if (result.tags['ENCasualDateParser'] && 
+        result.text.toLowerCase().includes('tonight') && parsedDate.get('hour') == 22) {
+        return true;
+    }
+
+    return false;
+}
 
 module.exports = TextDateExtractor;

@@ -14,6 +14,11 @@ test('simple ordinal date', () => {
     validateMessage(message, "I'm out on the", [{ isAllDay: true, start: { m: 4, d: 1, y: 2019 } }]);
 });
 
+test('tonight', () => {
+    var message = { Date: "26-Mar-19", Content: "I'm out Tonight" };
+    validateMessage(message, "I'm out", [{ isAllDay: true, start: { m: 3, d: 26, y: 2019 } }]);
+});
+
 test('two dates', () => {
     var message = { Date: "10-Jul-17", Content: "going to be out 7/11 and 7/13 traveling"};
     validateMessage(message, "going to be out and traveling", [

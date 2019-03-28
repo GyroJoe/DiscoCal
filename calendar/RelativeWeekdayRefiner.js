@@ -18,13 +18,20 @@ function RelativeWeekdayRefiner() {
                 return;
             }
 
-            if (lastRelativeResult && result.tags['ENWeekdayParser'] && !result.start.isCertain('day')) {
-                let startMoment = lastRelativeResult.start.moment();
-                startMoment.day(result.start.get('weekday'));
+            let includesThis = result.text.toLowerCase().includes('this');
+            if (lastRelativeResult && result.tags['ENWeekdayParser']) {
+                if (!result.start.isCertain('day') && !includesThis) {
+                    let startMoment = lastRelativeResult.start.moment();
+                    startMoment.day(result.start.get('weekday'));
 
-                result.start.imply('day', startMoment.date());
-                result.start.imply('month', startMoment.month() + 1);
-                result.start.imply('year', startMoment.year());
+                    result.start.imply('day', startMoment.date());
+                    result.start.imply('month', startMoment.month() + 1);
+                    result.start.imply('year', startMoment.year());
+                }
+
+                if (includesThis) {
+                    lastRelativeResult = undefined;
+                }
             }
         });
 

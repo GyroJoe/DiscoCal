@@ -65,6 +65,16 @@ test('simple relative week day chaining', () => {
     ]);
 });
 
+test('relative week day chaining this resets', () => {
+    var message = { Date: "26-Mar-19", Content: "I'm out thursday, next friday, THIS friday, saturday" };
+    validateMessage(message, "I'm out", [
+        { isAllDay: true, start: { m: 3, d: 28, y: 2019 } },
+        { isAllDay: true, start: { m: 4, d: 5 } },
+        { isAllDay: true, start: { m: 3, d: 29 } },
+        { isAllDay: true, start: { m: 3, d: 30 } },
+    ]);
+});
+
 test('complex relative week day chaining', () => {
     var message = { Date: "26-Mar-19", Content: "I'm out thursday and also next tuesday and thursday" };
     validateMessage(message, "I'm out  and also  and", [

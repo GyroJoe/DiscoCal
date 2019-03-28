@@ -108,6 +108,14 @@ test('tonight all day', () => {
     ]);
 });
 
+test('multi-parser match date ambiguity', () => {
+    var message = { Date: "01-Jan-19", Content: "Out the week of 4/2, back on Saturday 4/7" };
+    validateMessage(message, "Out the week of  back", [
+        { isAllDay: true, start: { m: 4, d: 2, y: 2019 } },
+        { isAllDay: true, start: { m: 4, d: 7 } },
+    ]);
+});
+
 function validateMessage(message, title, expectedDates) {
     var results = extractor.extract(message.Content, Date.parse(message.Date));
 

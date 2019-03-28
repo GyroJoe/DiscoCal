@@ -14,8 +14,6 @@ function OrderFixupRefiner(parsers) {
             return map;
         });
 
-        parserIndexes = {};
-
         results.sort((a, b) => {
             if (a.index == b.index) {
                 // For ties, use the relative order of the source parsers

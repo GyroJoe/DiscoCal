@@ -6,14 +6,12 @@ const TextDateExtractor = require('./calendar/TextDateExtractor');
 var dateString
 
 program
-    .arguments('<date-string...>')
-    .action((dateStrings) => {
-        dateString = dateStrings.join(' ')
-    });
-    
-program.parse(process.argv);
+    .option('-d --reference-date <date>', 'Reference date to use for extraction', val => new Date(val), Date())
+    .parse(process.argv);
 
 let extractor = new TextDateExtractor();
 
-console.log(`Extracting: 'dateString'`);
-console.log(extractor.extract(dateString));
+var dateString = program.args.join(' ');
+console.log(`Extracting: '${dateString.toString()}'`);
+console.log(`Reference: ${program.referenceDate}`);
+console.log(extractor.extract(dateString, program.referenceDate));

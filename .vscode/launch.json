@@ -7,6 +7,13 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Run extractdate",
+            "program": "${workspaceFolder}/extractdate.js",
+            "args": [ "today" ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Launch Bot",
             "program": "${workspaceFolder}/bot.js"
         }

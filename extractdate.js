@@ -6,7 +6,7 @@ const TextDateExtractor = require('./calendar/TextDateExtractor');
 var dateString
 
 program
-    .option('-d --reference-date <date>', 'Reference date to use for extraction', val => new Date(val), Date())
+    .option('-d --reference-date <date>', 'Reference date to use for extraction', val => new Date(val), new Date())
     .parse(process.argv);
 
 let extractor = new TextDateExtractor();

@@ -31,7 +31,7 @@ module.exports = class CreateEventCommand extends commando.Command {
         let calendarInterface = new CalendarInterface(Auth.bearer)
         let eventCreator = new EventCreator(calendarInterface)
 
-        let eventStrings = eventDescription.dates.map(v => moment(v).format('l')).join(', ');
+        let eventStrings = eventDescription.dates.map(v => moment(v.start).format('l')).join(', ');
 
         let reply = await msg.reply(`Creating your events: ${eventStrings}`);
 

@@ -1,4 +1,3 @@
-const auth = require('./auth.json')
 const calendarInterface = require('./OutlookInterface')
 
 class EventCreator

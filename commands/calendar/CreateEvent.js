@@ -3,9 +3,9 @@
 const commando = require('discord.js-commando');
 const moment = require('moment');
 
-const EventCreator = require('../../eventCreator')
-const CalendarInterface = require('../../OutlookInterface')
-const Auth = require('../../auth.json')
+const EventCreator = require('../../eventCreator');
+const CalendarInterface = require('../../OutlookInterface');
+const auth = require('../../auth.json');
 
 module.exports = class CreateEventCommand extends commando.Command {
     constructor(client) {
@@ -28,7 +28,7 @@ module.exports = class CreateEventCommand extends commando.Command {
     }
 
     async run(msg, { eventDescription }) {
-        let calendarInterface = new CalendarInterface(Auth.bearer)
+        let calendarInterface = new CalendarInterface(auth.bearer)
         let eventCreator = new EventCreator(calendarInterface)
 
         let eventStrings = eventDescription.dates.map(v => moment(v.start).format('l')).join(', ');
@@ -39,6 +39,6 @@ module.exports = class CreateEventCommand extends commando.Command {
         console.log(createdEvents);
 
         let createdMessage = reply.content.replace('Creating your events:', 'Events created:')
-        await reply.edit(createdMessage);
+        return await reply.edit(createdMessage);
     }
 };

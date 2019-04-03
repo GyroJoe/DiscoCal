@@ -14,7 +14,8 @@
 		"dateformat": "^3.0.3",
 		"discord.js": "^11.4.2",
 		"discord.js-commando": "^0.10.0",
-		"moment": "^2.24.0"
+		"moment": "^2.24.0",
+		"simple-oauth2": "^2.2.1"
 	},
 	"devDependencies": {
 		"commander": "^2.19.0",

@@ -1,6 +1,22 @@
 "use strict";
 
 const commando = require('discord.js-commando');
+const discordjs = require('discord.js');
+const simpleoauth = require('simple-oauth2');
+
+const oauthOptions = {
+    client: {
+        id: 'a61596a3-bd2a-40ff-9973-70c3691e3cc2',
+        secret: ''
+    },
+    auth: {
+        tokenHost: 'https://login.microsoftonline.com',
+        tokenPath: '/common/oauth2/v2.0/token',
+        authorizePath: '/common/oauth2/v2.0/authorize'
+    },
+};
+
+const oauthOutlook = simpleoauth.create(oauthOptions);
 
 module.exports = class AuthCommand extends commando.Command {
     constructor(client) {
@@ -31,8 +47,19 @@ module.exports = class AuthCommand extends commando.Command {
     async run(msg, { service }) {
         switch (service.toLowerCase()) {
             case 'outlook':
-                let channel = await msg.author.createDM();
-                return await channel.send('http://outlook.com');
+                let authorizationUrl = oauthOutlook.authorizationCode.authorizeURL({
+                    redirect_uri: 'http://localhost:3000/callback/oauth/outlook',
+                    scope: 'https://outlook.office.com/calendars.readwrite offline_access'
+                });
+
+                await msg.reply('Sending you a DM with more details.')
+
+                let embed = new discordjs.RichEmbed()
+                    .setTitle('Authorize DiscoCal')
+                    .setDescription('Authorize DiscoCal to use your account.')
+                    .setURL(authorizationUrl);
+
+                return msg.direct('', { embed: embed });
                 break;
         
             default:

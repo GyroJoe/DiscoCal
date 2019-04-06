@@ -3,6 +3,7 @@
 const commando = require('discord.js-commando');
 const auth = require('./auth.json');
 const path = require('path');
+const sqlite = require('sqlite');
 const express = require('express');
 const simpleoauth = require('simple-oauth2');
 
@@ -19,6 +20,10 @@ client.registry
     .registerGroup('config', 'Configuration')
     .registerTypesIn(path.join(__dirname, 'types'))
     .registerCommandsIn(path.join(__dirname, 'commands'));
+
+client.setProvider(
+    sqlite.open(path.join(__dirname, 'settings.sqlite3')).then(db => new commando.SQLiteProvider(db))
+).catch(console.error);
 
 client.login(auth.token);
 

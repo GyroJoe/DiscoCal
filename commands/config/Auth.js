@@ -26,6 +26,7 @@ module.exports = class AuthCommand extends commando.Command {
             memberName: 'auth',
             description: 'Authenticate with a service.',
             userPermissions: ['ADMINISTRATOR'],
+            guildOnly: true,
 
             args: [
                 {
@@ -47,9 +48,14 @@ module.exports = class AuthCommand extends commando.Command {
     async run(msg, { service }) {
         switch (service.toLowerCase()) {
             case 'outlook':
+                let state = {
+                    guild: msg.guild.id
+                };
+
                 let authorizationUrl = oauthOutlook.authorizationCode.authorizeURL({
                     redirect_uri: 'http://localhost:3000/callback/oauth/outlook',
-                    scope: 'https://outlook.office.com/calendars.readwrite offline_access'
+                    scope: 'https://outlook.office.com/calendars.readwrite offline_access',
+                    state: JSON.stringify(state)
                 });
 
                 await msg.reply('Sending you a DM with more details.')

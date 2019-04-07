@@ -9,7 +9,7 @@ const simpleoauth = require('simple-oauth2');
 
 const client = new commando.CommandoClient({
     owner: [
-        '559861066251894847', // joeflint
+        '559861066251894847', '106647509031452672', // joeflint
         '559793784771051531', // daleclai
     ]
 });
@@ -46,6 +46,10 @@ const oauthOutlook = simpleoauth.create(oauthOptions);
 
 let app = express();
 app.get('/callback/oauth/outlook', async (req, res) => {
+    let state = JSON.parse(req.query.state);
+
+    let guild = /** @type commando.GuildExtension */ (client.guilds.get(state.guild));
+
     let code = req.query.code;
     
     let tokenConfig = {
@@ -53,6 +57,8 @@ app.get('/callback/oauth/outlook', async (req, res) => {
         redirect_uri: 'http://localhost:3000/callback/oauth/outlook'
     }
     let result = await oauthOutlook.authorizationCode.getToken(tokenConfig);
+
+    guild.settings.set('token-outlook', result);
 
     res.send(result);
 });

@@ -5,7 +5,6 @@ const moment = require('moment');
 
 const EventCreator = require('../../eventCreator');
 const CalendarInterface = require('../../OutlookInterface');
-const auth = require('../../auth.json');
 
 module.exports = class CreateEventCommand extends commando.Command {
     constructor(client) {
@@ -28,7 +27,8 @@ module.exports = class CreateEventCommand extends commando.Command {
     }
 
     async run(msg, { eventDescription }) {
-        let calendarInterface = new CalendarInterface(auth.bearer)
+        let token = msg.guild.settings.get('token-outlook');
+        let calendarInterface = new CalendarInterface(token.access_token)
         let eventCreator = new EventCreator(calendarInterface)
 
         let eventStrings = eventDescription.dates.map(v => moment(v.start).format('l')).join(', ');

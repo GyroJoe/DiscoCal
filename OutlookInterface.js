@@ -1,11 +1,14 @@
-const networkLayer = require('./NetworkLayer')
+"use strict";
+
+const axios = require('axios');
 const dateFormat = require('dateFormat')
 
-class OutlookCalendarInterface
-{
-	constructor(bearer)
-	{
-		this.bearer = bearer
+class OutlookCalendarInterface {
+	constructor(bearer) {
+		this.axios = axios.default.create({
+			baseURL: 'https://outlook.office.com/api/v2.0/',
+			headers: { 'Authorization': `Bearer ${bearer}` }
+		});
 	}
 
 	async CreateEvent(userName, description, startDate, endDate, isAllDay, timeZone, originalMsg)
@@ -23,33 +26,24 @@ class OutlookCalendarInterface
 			var endDateText = dateFormat(endDate, dateFormatString)
 		}
 
-		let httpBody = JSON.stringify({
-			"Subject": userName + " " + description,
-	  	"Start": {
+		let event = {
+			Subject: userName + " " + description,
+	  	Start: {
 	      		"DateTime": startDateText,
 	      		"TimeZone": timeZone
 	  	},
-	  	"End": {
+	  	End: {
 	      		"DateTime": endDateText,
 	      		"TimeZone": timeZone
 	  	},
-			"IsAllDay": isAllDay,
-			"Body": {
-				"ContentType": "Text",
-				"Content":originalMsg.content
+			IsAllDay: isAllDay,
+			Body: {
+				ContentType: "Text",
+				Content: originalMsg.content
 			}
-		})
+		};
 
-		let options = {
-		  host: 'outlook.office.com',
-		  path: '/api/v2.0/me/events',
-		  method: 'POST',
-		  headers: {
-		      'Authorization': 'Bearer ' + this.bearer 
-		    },
-		}
-
-		return networkLayer.CreateHTTPSRequest(options, httpBody)
+		return this.axios.post('me/events', event);
 	}
 }
 

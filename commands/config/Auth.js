@@ -3,7 +3,7 @@
 const commando = require('discord.js-commando');
 const discordjs = require('discord.js');
 
-const OutlookAuth = require('../../network/OutlookAuth');
+const OutlookAuthProvider = require('../../network/OutlookAuthProvider');
 
 module.exports = class AuthCommand extends commando.Command {
     constructor(client) {
@@ -38,7 +38,7 @@ module.exports = class AuthCommand extends commando.Command {
                 let state = {
                     guild: msg.guild.id
                 };
-                let authorizationUrl = OutlookAuth.authorizationUrl(state);
+                let authorizationUrl = OutlookAuthProvider.authorizationUrl(state);
 
                 await msg.reply('Sending you a DM with more details.')
 

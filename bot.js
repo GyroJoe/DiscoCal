@@ -6,7 +6,7 @@ const path = require('path');
 const sqlite = require('sqlite');
 const express = require('express');
 
-const OutlookAuth = require('./network/OutlookAuth');
+const OutlookAuthProvider = require('./network/OutlookAuthProvider');
 
 const client = new commando.CommandoClient({
     owner: [
@@ -36,7 +36,7 @@ app.get('/callback/oauth/outlook', async (req, res) => {
 
     let code = req.query.code;
     
-    let result = await OutlookAuth.getToken(code);
+    let result = await OutlookAuthProvider.getToken(code);
 
     guild.settings.set('token-outlook', result.token);
 

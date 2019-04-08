@@ -6,7 +6,7 @@ const moment = require('moment');
 
 const EventCreator = require('../../eventCreator');
 const CalendarInterface = require('../../OutlookInterface');
-const OutlookAuth = require('../../network/OutlookAuth');
+const OutlookAuthProvider = require('../../network/OutlookAuthProvider');
 
 module.exports = class CreateEventCommand extends commando.Command {
     constructor(client) {
@@ -40,7 +40,7 @@ module.exports = class CreateEventCommand extends commando.Command {
         let guild = /** @type commando.GuildExtension */ (msg.guild);
         let rawToken = guild.settings.get('token-outlook');
 
-        let token = OutlookAuth.accessToken(rawToken);
+        let token = OutlookAuthProvider.accessToken(rawToken);
 
         try {
             await createEvents(token, msg, eventDescription);

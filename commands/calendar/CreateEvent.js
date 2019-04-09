@@ -6,6 +6,7 @@ const moment = require('moment');
 
 const EventCreator = require('../../eventCreator');
 const CalendarInterface = require('../../OutlookInterface');
+const OAuthAuthenticator = require('../../network/OAuthAuthenticator');
 const OutlookAuthProvider = require('../../network/OutlookAuthProvider');
 
 module.exports = class CreateEventCommand extends commando.Command {
@@ -26,6 +27,8 @@ module.exports = class CreateEventCommand extends commando.Command {
                 }
             ]
         });
+
+        this.authenticator = new OAuthAuthenticator(OutlookAuthProvider);
     }
 
     /**
@@ -37,32 +40,14 @@ module.exports = class CreateEventCommand extends commando.Command {
 
         let reply = /** @type discordjs.Message */ (await msg.reply(`Creating your events: ${eventStrings}`));
 
-        let guild = /** @type commando.GuildExtension */ (msg.guild);
-        let rawToken = guild.settings.get('token-outlook');
-
-        let token = OutlookAuthProvider.accessToken(rawToken);
-
-        try {
-            await createEvents(token, msg, eventDescription);
-        } catch (error) {
-            if (error.response && error.response.status == 401) {
-                token = await token.refresh();
-
-                await createEvents(token, msg, eventDescription);
-            }
-            else {
-                throw error;
-            }
-        }
+        await this.authenticator.performRequest(msg.guild, async (token) => {
+            let calendarInterface = new CalendarInterface(token)
+            let eventCreator = new EventCreator(calendarInterface);
+            let createdEvents = await eventCreator.CreateEvent(msg, eventDescription);
+            console.log(createdEvents);
+        });
 
         let createdMessage = reply.content.replace('Creating your events:', 'Events created:')
         return await reply.edit(createdMessage);
     }
 };
-
-async function createEvents(token, msg, eventDescription) {
-    let calendarInterface = new CalendarInterface(token.token.access_token)
-    let eventCreator = new EventCreator(calendarInterface);
-    let createdEvents = await eventCreator.CreateEvent(msg, eventDescription);
-    console.log(createdEvents);
-}

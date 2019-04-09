@@ -61,4 +61,28 @@ module.exports = class OAuthAuthenticator {
             }
         });
     }
+
+    /**
+     * @param {discordjs.Guild} guild
+     * @param {(token: string) => Promise} operation
+     */
+    async performRequest(guild, operation) {
+        let guildExtension = /** @type commando.GuildExtension */ (guild);
+        let rawToken = guildExtension.settings.get('token-outlook');
+
+        let token = this.authProvider.accessToken(rawToken);
+
+        try {
+            await operation(token.token.access_token);
+        } catch (error) {
+            if (error.response && error.response.status == 401) {
+                token = await token.refresh();
+
+                await operation(token.token.access_token)
+            }
+            else {
+                throw error;
+            }
+        }
+    }
 };

@@ -1,11 +1,13 @@
 "use strict";
 
 const commando = require('discord.js-commando');
+const discordjs = require('discord.js');
 const auth = require('./auth.json');
 const path = require('path');
 const sqlite = require('sqlite');
 const express = require('express');
 
+const OAuthAuthenticator = require('./network/OAuthAuthenticator');
 const OutlookAuthProvider = require('./network/OutlookAuthProvider');
 
 const client = new commando.CommandoClient({
@@ -29,18 +31,7 @@ client.setProvider(
 client.login(auth.token);
 
 let app = express();
-app.get('/callback/oauth/outlook', async (req, res) => {
-    let state = JSON.parse(req.query.state);
-
-    let guild = /** @type commando.GuildExtension */ (client.guilds.get(state.guild));
-
-    let code = req.query.code;
-    
-    let result = await OutlookAuthProvider.getToken(code);
-
-    guild.settings.set('token-outlook', result.token);
-
-    res.send('Success');
-});
+let authenticator = new OAuthAuthenticator(OutlookAuthProvider);
+authenticator.setupCallbackHandler(app, client);
 
 app.listen(3000);

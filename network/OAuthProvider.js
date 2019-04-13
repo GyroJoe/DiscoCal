@@ -4,11 +4,13 @@ const simpleoauth = require('simple-oauth2');
 
 module.exports = class OAuthProvider {
     /**
+     * @param {string} name
      * @param {simpleoauth.OAuthClient} oauth
      * @param {string} redirectUrl
      * @param {string} scopes
      */
-    constructor(oauth, redirectUrl, scopes) {
+    constructor(name, oauth, redirectUrl, scopes) {
+        this.name = name;
         this.oauth = oauth;
         this.redirectUrl = redirectUrl;
         this.scopes = scopes;

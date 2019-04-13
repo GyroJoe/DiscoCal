@@ -12,6 +12,7 @@ module.exports = class OAuthAuthenticator {
      */
     constructor(authProvider) {
         this.authProvider = authProvider;
+        this.tokenSettingName = `token-${this.authProvider.name}`
     }
 
     /**
@@ -41,7 +42,6 @@ module.exports = class OAuthAuthenticator {
      * @param {discordjs.Client} client
      */
     setupCallbackHandler(app, client) {
-        let self = this;
         app.get('/callback/oauth/outlook', async (req, res, next) => {
             try {
                 let state = JSON.parse(req.query.state);
@@ -49,9 +49,9 @@ module.exports = class OAuthAuthenticator {
                 let guild = /** @type commando.GuildExtension */ (client.guilds.get(state.guild));
             
                 let code = req.query.code;
-                let result = await self.authProvider.getToken(code);
+                let result = await this.authProvider.getToken(code);
             
-                guild.settings.set('token-outlook', result.token);
+                guild.settings.set(this.tokenSettingName, result.token);
             
                 dmChannel.send(`Authorization successful for ${guild.name}.`)
             
@@ -68,7 +68,7 @@ module.exports = class OAuthAuthenticator {
      */
     async performRequest(guild, operation) {
         let guildExtension = /** @type commando.GuildExtension */ (guild);
-        let rawToken = guildExtension.settings.get('token-outlook');
+        let rawToken = guildExtension.settings.get(this.tokenSettingName);
 
         let token = this.authProvider.accessToken(rawToken);
 

@@ -3,6 +3,7 @@
 const commando = require('discord.js-commando');
 const discordjs = require('discord.js');
 const express = require('express');
+const url = require('url');
 
 const OAuthProvider = require('./OAuthProvider');
 
@@ -42,7 +43,9 @@ module.exports = class OAuthAuthenticator {
      * @param {discordjs.Client} client
      */
     setupCallbackHandler(app, client) {
-        app.get('/callback/oauth/outlook', async (req, res, next) => {
+        let route = url.parse(this.authProvider.redirectUrl).path;
+
+        app.get(route, async (req, res, next) => {
             try {
                 let state = JSON.parse(req.query.state);
                 let dmChannel = /** @type discordjs.DMChannel */ (client.channels.get(state.dmChannel));

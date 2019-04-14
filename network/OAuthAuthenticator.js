@@ -80,8 +80,9 @@ module.exports = class OAuthAuthenticator {
         } catch (error) {
             if (error.response && error.response.status == 401) {
                 token = await token.refresh();
+                guildExtension.settings.set(this.tokenSettingName, token.token);
 
-                await operation(token.token.access_token)
+                await operation(token.token.access_token);
             }
             else {
                 throw error;

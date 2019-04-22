@@ -3,8 +3,7 @@
 const commando = require('discord.js-commando');
 const discordjs = require('discord.js');
 
-const OAuthAuthenticator = require('../../network/OAuthAuthenticator');
-const OutlookAuthProvider = require('../../network/OutlookAuthProvider');
+const Authenticator = require('../../network/Authenticator');
 
 module.exports = class AuthCommand extends commando.Command {
     constructor(client) {
@@ -36,8 +35,7 @@ module.exports = class AuthCommand extends commando.Command {
     async run(msg, { service }) {
         switch (service.toLowerCase()) {
             case 'outlook':
-                let authenticator = new OAuthAuthenticator(OutlookAuthProvider);
-                authenticator.authorize(msg);
+                Authenticator.outlook.authorize(msg);
                 break;
         
             default:

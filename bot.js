@@ -7,8 +7,7 @@ const path = require('path');
 const sqlite = require('sqlite');
 const express = require('express');
 
-const OAuthAuthenticator = require('./network/OAuthAuthenticator');
-const OutlookAuthProvider = require('./network/OutlookAuthProvider');
+const Authenticator = require('./network/Authenticator');
 
 const client = new commando.CommandoClient({
     owner: [
@@ -31,7 +30,6 @@ client.setProvider(
 client.login(auth.token);
 
 let app = express();
-let authenticator = new OAuthAuthenticator(OutlookAuthProvider);
-authenticator.setupCallbackHandler(app, client);
+Authenticator.outlook.setupCallbackHandler(app, client);
 
 app.listen(3000);

@@ -4,10 +4,9 @@ const commando = require('discord.js-commando');
 const discordjs = require('discord.js');
 const moment = require('moment');
 
+const Authenticator = require('../../network/Authenticator');
 const EventCreator = require('../../eventCreator');
 const CalendarInterface = require('../../OutlookInterface');
-const OAuthAuthenticator = require('../../network/OAuthAuthenticator');
-const OutlookAuthProvider = require('../../network/OutlookAuthProvider');
 
 module.exports = class CreateEventCommand extends commando.Command {
     constructor(client) {
@@ -27,8 +26,6 @@ module.exports = class CreateEventCommand extends commando.Command {
                 }
             ]
         });
-
-        this.authenticator = new OAuthAuthenticator(OutlookAuthProvider);
     }
 
     /**
@@ -38,16 +35,16 @@ module.exports = class CreateEventCommand extends commando.Command {
     async run(msg, { eventDescription }) {
         let eventStrings = eventDescription.dates.map(v => moment(v.start).format('l')).join(', ');
 
-        let reply = /** @type discordjs.Message */ (await msg.reply(`Creating your events: ${eventStrings}`));
+        let reply = /** @type discordjs.Message */ (await msg.reply(`Creating your events...`));
 
-        await this.authenticator.performRequest(msg.guild, async (token) => {
+        await Authenticator.outlook.performRequest(msg.guild, async (token) => {
             let calendarInterface = new CalendarInterface(token)
             let eventCreator = new EventCreator(calendarInterface);
             let createdEvents = await eventCreator.CreateEvent(msg, eventDescription);
             console.log(createdEvents);
         });
 
-        let createdMessage = reply.content.replace('Creating your events:', 'Events created:')
+        let createdMessage = reply.content.replace('Creating your events...', `Events created: ${eventStrings}`)
         return await reply.edit(createdMessage);
     }
 };

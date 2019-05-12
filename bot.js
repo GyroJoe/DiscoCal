@@ -17,7 +17,9 @@ const client = new commando.CommandoClient({
 });
 
 client.registry
-    .registerDefaults()
+    .registerDefaultTypes()
+    .registerDefaultGroups()
+    .registerDefaultCommands({ eval_: false })
     .registerGroup('calendar', 'Calendar')
     .registerGroup('config', 'Configuration')
     .registerTypesIn(path.join(__dirname, 'types'))

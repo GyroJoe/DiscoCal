@@ -8,6 +8,7 @@ const sqlite = require('sqlite');
 const express = require('express');
 
 const Authenticator = require('./network/Authenticator');
+const PingHandler = require('./network/PingHandler');
 
 const client = new commando.CommandoClient({
     owner: [
@@ -33,5 +34,6 @@ client.login(auth.token);
 
 let app = express();
 Authenticator.outlook.setupCallbackHandler(app, client);
+PingHandler(app);
 
 app.listen(3000);

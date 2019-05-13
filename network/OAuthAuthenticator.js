@@ -27,7 +27,7 @@ module.exports = class OAuthAuthenticator {
             guild: msg.guild.id,
             dmChannel: dmChannel.id
         };
-        let authorizationUrl = this.authProvider.authorizationUrl(state);
+        let authorizationUrl = await this.authProvider.authorizationUrl(state);
 
         let embed = new discordjs.RichEmbed()
             .setTitle(`Authorize ${botName}`)
@@ -73,7 +73,7 @@ module.exports = class OAuthAuthenticator {
         let guildExtension = /** @type commando.GuildExtension */ (guild);
         let rawToken = guildExtension.settings.get(this.tokenSettingName);
 
-        let token = this.authProvider.accessToken(rawToken);
+        let token = await this.authProvider.accessToken(rawToken);
 
         try {
             await operation(token.token.access_token);

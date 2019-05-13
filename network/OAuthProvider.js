@@ -5,23 +5,27 @@ const simpleoauth = require('simple-oauth2');
 module.exports = class OAuthProvider {
     /**
      * @param {string} name
-     * @param {simpleoauth.OAuthClient} oauth
+     * @param {Promise<simpleoauth.OAuthClient>} oauthFactory
      * @param {string} redirectUrl
      * @param {string} scopes
      */
-    constructor(name, oauth, redirectUrl, scopes) {
+    constructor(name, oauthFactory, redirectUrl, scopes) {
         this.name = name;
-        this.oauth = oauth;
+        this.oauth = oauthFactory;
         this.redirectUrl = redirectUrl;
         this.scopes = scopes;
+
+        this.oauthClient = null;
     }
 
     /**
      * @param {any} state
-     * @returns {string} Authorization URL
+     * @returns {Promise<string>} Authorization URL
      */
-    authorizationUrl(state) {   
-        return this.oauth.authorizationCode.authorizeURL({
+    async authorizationUrl(state) {
+        let oauth = await this.oauth;
+
+        return oauth.authorizationCode.authorizeURL({
             redirect_uri: this.redirectUrl,
             scope: this.scopes,
             state: JSON.stringify(state)
@@ -30,10 +34,11 @@ module.exports = class OAuthProvider {
 
     /**
      * @param {simpleoauth.Token} rawToken Raw OAuth token
-     * @returns {simpleoauth.AccessToken} Access token
+     * @returns {Promise<simpleoauth.AccessToken>} Access token
      */
-    accessToken(rawToken) {
-        return this.oauth.accessToken.create(rawToken);
+    async accessToken(rawToken) {
+        let oauth = await this.oauth;
+        return oauth.accessToken.create(rawToken);
     }
 
     /**
@@ -46,7 +51,9 @@ module.exports = class OAuthProvider {
             redirect_uri: this.redirectUrl
         }
 
-        let rawToken = await this.oauth.authorizationCode.getToken(tokenConfig);
+        let oauth = await this.oauth;
+
+        let rawToken = await oauth.authorizationCode.getToken(tokenConfig);
 
         return this.accessToken(rawToken);
     }

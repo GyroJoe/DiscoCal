@@ -2,11 +2,13 @@
 
 const commando = require('discord.js-commando');
 const discordjs = require('discord.js');
-const auth = require('./auth.json');
 const path = require('path');
 const sqlite = require('sqlite');
 const express = require('express');
 
+const port = process.env.PORT || 3000;
+
+const Secrets = require('./config/Secrets');
 const Authenticator = require('./network/Authenticator');
 const PingHandler = require('./network/PingHandler');
 
@@ -30,10 +32,11 @@ client.setProvider(
     sqlite.open(path.join(__dirname, 'settings.sqlite3')).then(db => new commando.SQLiteProvider(db))
 ).catch(console.error);
 
-client.login(auth.token);
+Secrets.discordToken().then((token) => client.login(token));
 
 let app = express();
 Authenticator.outlook.setupCallbackHandler(app, client);
 PingHandler(app);
 
-app.listen(3000);
+app.listen(port);
+console.log('Server running at http://localhost:%d', port);

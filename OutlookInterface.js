@@ -1,7 +1,7 @@
 "use strict";
 
 const axios = require('axios');
-const dateFormat = require('dateFormat')
+const dateFormat = require('dateformat')
 
 class OutlookCalendarInterface {
 	constructor(bearer) {

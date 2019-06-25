@@ -1,4 +1,5 @@
 const calendarInterface = require('./OutlookInterface')
+const moment = require('moment');
 
 class EventCreator
 {
@@ -12,7 +13,10 @@ class EventCreator
 		let promises = []
 
 		description.dates.forEach(element => {
-			promises.push(this.calendarInterface.CreateEvent(message.author.username, description.title, element.start, element.end, element.isAllDay, "Pacific Standard Time", message))
+			let end = element.end || element.start;
+			let adjustedEnd = moment(end).add(1, 'days').toDate();
+			
+			promises.push(this.calendarInterface.CreateEvent(message.author.username, description.title, element.start, adjustedEnd, element.isAllDay, "Pacific Standard Time", message));
 		});
 		
 		return Promise.all(promises)

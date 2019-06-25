@@ -115,7 +115,7 @@ function treatAsAllDay(result, parsedDate) {
 }
 
 function adjustAllDayDate(date) {
-    date.assign('hour', 12);
+    date.assign('hour', 0);
     date.assign('minute', 0);
     date.assign('second', 0);
 }

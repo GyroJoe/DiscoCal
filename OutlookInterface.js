@@ -1,7 +1,9 @@
 "use strict";
 
 const axios = require('axios');
-const dateFormat = require('dateformat')
+const moment = require('moment');
+
+const dateFormat = 'YYYY-MM-DDTHH:mm:ss';
 
 class OutlookCalendarInterface {
 	constructor(bearer) {
@@ -13,30 +15,18 @@ class OutlookCalendarInterface {
 
 	async CreateEvent(userName, description, startDate, endDate, isAllDay, timeZone, originalMsg)
 	{
-		let dateFormatString = "yyyy-mm-dd'T'HH:MM:ss"
-
-		// If is all day meeting, remove the time info
-		if (isAllDay) {
-			var startDateText = dateFormat(new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate(), 0, 0, 0, 0), dateFormatString)
-			var endDateText = dateFormat(new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 1, 0, 0, 0, 0), dateFormatString)
-		}
-		else {
-			// Format time string from date
-			var startDateText = dateFormat(startDate, dateFormatString)
-			var endDateText = dateFormat(endDate, dateFormatString)
-		}
-
 		let event = {
 			Subject: userName + " " + description,
-	  	Start: {
-	      		"DateTime": startDateText,
-	      		"TimeZone": timeZone
-	  	},
-	  	End: {
-	      		"DateTime": endDateText,
-	      		"TimeZone": timeZone
-	  	},
+			Start: {
+				"DateTime": moment(startDate).format(dateFormat),
+				"TimeZone": timeZone
+			},
+			End: {
+				"DateTime": moment(endDate).format(dateFormat),
+				"TimeZone": timeZone
+			},
 			IsAllDay: isAllDay,
+			IsReminderOn: false,
 			Body: {
 				ContentType: "Text",
 				Content: originalMsg.content

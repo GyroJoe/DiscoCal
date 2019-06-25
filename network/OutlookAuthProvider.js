@@ -27,6 +27,6 @@ async function oauthFactory() {
 }
 
 const scopes = 'https://outlook.office.com/calendars.readwrite offline_access';
-const redirectUrl = 'http://localhost:3000/callback/oauth/outlook';
+const redirectUrlPath = '/callback/oauth/outlook';
 
-module.exports = new OAuthProvider('outlook', oauthFactory(), redirectUrl, scopes);
+module.exports = new OAuthProvider('outlook', oauthFactory(), redirectUrlPath, scopes);

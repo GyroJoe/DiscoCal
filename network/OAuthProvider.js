@@ -2,17 +2,21 @@
 
 const simpleoauth = require('simple-oauth2');
 
+const protocol = process.env.WEBSITE_HOSTNAME ? 'https' : 'http';
+const hostname = process.env.WEBSITE_HOSTNAME || 'localhost:3000';
+const baseUrl = `${protocol}://${hostname}`;
+
 module.exports = class OAuthProvider {
     /**
      * @param {string} name
      * @param {Promise<simpleoauth.OAuthClient>} oauthFactory
-     * @param {string} redirectUrl
+     * @param {string} redirectUrlPath
      * @param {string} scopes
      */
-    constructor(name, oauthFactory, redirectUrl, scopes) {
+    constructor(name, oauthFactory, redirectUrlPath, scopes) {
         this.name = name;
         this.oauth = oauthFactory;
-        this.redirectUrl = redirectUrl;
+        this.redirectUrl = baseUrl + redirectUrlPath;
         this.scopes = scopes;
 
         this.oauthClient = null;

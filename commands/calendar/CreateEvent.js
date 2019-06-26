@@ -1,14 +1,12 @@
 "use strict";
 
 const commando = require('discord.js-commando');
-const discordjs = require('discord.js');
-const moment = require('moment');
 
-const Authenticator = require('../../network/Authenticator');
+const EventCommand = require('./EventCommand');
 const EventCreator = require('../../EventCreator');
-const CalendarInterface = require('../../OutlookInterface');
 
-module.exports = class CreateEventCommand extends commando.Command {
+
+module.exports = class CreateEventCommand extends EventCommand {
     constructor(client) {
         super(client, {
             name: 'create-event',
@@ -33,18 +31,6 @@ module.exports = class CreateEventCommand extends commando.Command {
      * @param {{ eventDescription: { title: String, dates: [{ start: Date, end: Date?, isAllDay: Boolean, }] } }} args
      */
     async run(msg, { eventDescription }) {
-        let eventStrings = eventDescription.dates.map(v => moment(v.start).format('l')).join(', ');
-
-        let reply = /** @type discordjs.Message */ (await msg.reply(`Creating your events...`));
-
-        await Authenticator.outlook.performRequest(msg.guild, async (token) => {
-            let calendarInterface = new CalendarInterface(token)
-            let eventCreator = new EventCreator(calendarInterface);
-            let createdEvents = await eventCreator.create(msg, eventDescription, EventCreator.Style.FULL);
-            console.log(createdEvents);
-        });
-
-        let createdMessage = reply.content.replace('Creating your events...', `Events created: ${eventStrings}`)
-        return await reply.edit(createdMessage);
+        return await this.createEvent(msg, eventDescription, EventCreator.Style.FULL);
     }
 };

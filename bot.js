@@ -26,7 +26,11 @@ client.registry
     .registerGroup('calendar', 'Calendar')
     .registerGroup('config', 'Configuration')
     .registerTypesIn(path.join(__dirname, 'types'))
-    .registerCommandsIn(path.join(__dirname, 'commands'));
+    .registerCommands([
+        require('./commands/config/Auth'),
+        require('./commands/calendar/CreateEvent'),
+        require('./commands/calendar/Out'),
+    ]);
 
 client.setProvider(
     sqlite.open(path.join(__dirname, 'settings.sqlite3')).then(db => new commando.SQLiteProvider(db))

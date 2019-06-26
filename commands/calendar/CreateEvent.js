@@ -5,7 +5,7 @@ const discordjs = require('discord.js');
 const moment = require('moment');
 
 const Authenticator = require('../../network/Authenticator');
-const EventCreator = require('../../eventCreator');
+const EventCreator = require('../../EventCreator');
 const CalendarInterface = require('../../OutlookInterface');
 
 module.exports = class CreateEventCommand extends commando.Command {

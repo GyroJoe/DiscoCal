@@ -6,17 +6,27 @@ const moment = require('moment');
 const dateFormat = 'YYYY-MM-DDTHH:mm:ss';
 
 class OutlookCalendarInterface {
-	constructor(bearer) {
+	/**
+	 * @param {string} token 
+	 */
+	constructor(token) {
 		this.axios = axios.default.create({
 			baseURL: 'https://outlook.office.com/api/v2.0/',
-			headers: { 'Authorization': `Bearer ${bearer}` }
+			headers: { 'Authorization': `Bearer ${token}` }
 		});
 	}
 
-	async CreateEvent(userName, description, startDate, endDate, isAllDay, timeZone, originalMsg)
-	{
+	/**
+	 * @param {string} subject 
+	 * @param {Date} startDate 
+	 * @param {Date} endDate 
+	 * @param {boolean} isAllDay 
+	 * @param {string} timeZone 
+	 * @param {string} body 
+	 */
+	async CreateEvent(subject, startDate, endDate, isAllDay, timeZone, body) {
 		let event = {
-			Subject: userName + " " + description,
+			Subject: subject,
 			Start: {
 				"DateTime": moment(startDate).format(dateFormat),
 				"TimeZone": timeZone
@@ -29,7 +39,7 @@ class OutlookCalendarInterface {
 			IsReminderOn: false,
 			Body: {
 				ContentType: "Text",
-				Content: originalMsg.content
+				Content: body
 			}
 		};
 

@@ -1,22 +1,32 @@
-const calendarInterface = require('./OutlookInterface')
+"use strict";
+
+const commando = require('discord.js-commando');
 const moment = require('moment');
 
-class EventCreator
-{
-	constructor(calendarInterface)
-	{
+const OutlookInterface = require('./OutlookInterface');
+
+class EventCreator {
+	/**
+	 * @param {OutlookInterface} calendarInterface 
+	 */
+	constructor(calendarInterface) {
 		this.calendarInterface = calendarInterface
 	}
 
-	async CreateEvent(message, description)
-	{
+	/**
+	 * @param {commando.CommandMessage} message 
+	 * @param {{ title: String, dates: [{ start: Date, end: Date?, isAllDay: Boolean, }] }} eventDescription 
+	 */
+	async CreateEvent(message, eventDescription) {
 		let promises = []
 
-		description.dates.forEach(element => {
+		let subject = `${message.author.username} ${eventDescription.title}`;
+
+		eventDescription.dates.forEach(element => {
 			let end = element.end || element.start;
 			let adjustedEnd = moment(end).add(1, 'days').toDate();
-			
-			promises.push(this.calendarInterface.CreateEvent(message.author.username, description.title, element.start, adjustedEnd, element.isAllDay, "Pacific Standard Time", message));
+
+			promises.push(this.calendarInterface.CreateEvent(subject, element.start, adjustedEnd, element.isAllDay, "Pacific Standard Time", message.content));
 		});
 		
 		return Promise.all(promises)
@@ -24,5 +34,3 @@ class EventCreator
 }
 
 module.exports = EventCreator
-
-

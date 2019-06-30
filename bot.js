@@ -33,7 +33,7 @@ client.registry
     ]);
 
 client.setProvider(
-    sqlite.open(path.join(__dirname, 'settings.sqlite3')).then(db => new commando.SQLiteProvider(db))
+    sqlite.open(path.join(__dirname, 'settings.sqlite3'), { verbose: true }).then(db => new commando.SQLiteProvider(db))
 ).catch(console.error);
 
 Secrets.discordToken().then((token) => client.login(token));

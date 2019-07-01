@@ -1,7 +1,7 @@
 "use strict";
 
+const azureStorage = require('azure-storage');
 const commando = require('discord.js-commando');
-const discordjs = require('discord.js');
 const path = require('path');
 const sqlite = require('sqlite');
 const express = require('express');
@@ -11,6 +11,7 @@ const port = process.env.PORT || 3000;
 const Secrets = require('./config/Secrets');
 const Authenticator = require('./network/Authenticator');
 const PingHandler = require('./network/PingHandler');
+const TableStorageProvider = require('./providers/TableStorageProvider');
 
 const client = new commando.CommandoClient({
     owner: [
@@ -32,9 +33,21 @@ client.registry
         require('./commands/calendar/Out'),
     ]);
 
-client.setProvider(
-    sqlite.open(path.join(__dirname, 'settings.sqlite3'), { verbose: true }).then(db => new commando.SQLiteProvider(db))
-).catch(console.error);
+/**
+ * @returns {Promise<commando.SettingProvider>}
+ */
+async function selectProvider() {
+    let tableServiceConnectionString = await Secrets.tableServiceConnectionString();
+
+    if (tableServiceConnectionString) {
+        return new TableStorageProvider(azureStorage.createTableService(tableServiceConnectionString));
+    } else {
+        let db = await sqlite.open(path.join(__dirname, 'settings.sqlite3'));
+        return new commando.SQLiteProvider(db);
+    }
+}
+
+client.setProvider(selectProvider()).catch(console.error);
 
 Secrets.discordToken().then((token) => client.login(token));
 

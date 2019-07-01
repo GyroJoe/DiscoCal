@@ -12,10 +12,12 @@ const secrets = async function loadSecrets() {
     
         let discordTokenBundle = await keyVaultClient.getSecret('https://discocal-dev-kv.vault.azure.net/', 'discord-token', '');
         let outlookSecretBundle = await keyVaultClient.getSecret('https://discocal-dev-kv.vault.azure.net/', 'outlook-secret', '');
+        let tableServiceConnectionStringBundle = await keyVaultClient.getSecret('https://discocal-dev-kv.vault.azure.net/', 'tableServiceConnectionString', '');
 
         return {
             discordToken: discordTokenBundle.value,
             outlookSecret: outlookSecretBundle.value,
+            tableServiceConnectionString: tableServiceConnectionStringBundle.value,
         };
     }
     else
@@ -36,4 +38,11 @@ module.exports.discordToken = async function discordToken() {
  */
 module.exports.outlookSecret = async function outlookSecret() {
     return (await secrets).outlookSecret;
+}
+
+/**
+ * @returns {Promise<string>}
+ */
+module.exports.tableServiceConnectionString = async function tableServiceConnectionString() {
+    return (await secrets).tableServiceConnectionString;
 }

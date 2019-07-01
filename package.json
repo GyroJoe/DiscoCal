@@ -12,6 +12,7 @@
 	"dependencies": {
 		"axios": "^0.19.0",
 		"azure-keyvault": "^3.0.4",
+		"azure-storage": "^2.10.3",
 		"chrono-node": "^1.3.11",
 		"discord.js": "^11.4.2",
 		"discord.js-commando": "^0.10.0",

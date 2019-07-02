@@ -19,14 +19,19 @@ module.exports = class EventCommand extends commando.Command {
 
         let reply = /** @type discordjs.Message */ (await msg.reply(`Creating your events...`));
 
-        await Authenticator.outlook.performRequest(msg.guild, async (token) => {
-            let calendarInterface = new CalendarInterface(token)
-            let eventCreator = new EventCreator(calendarInterface);
-            let createdEvents = await eventCreator.create(msg, eventDescription, style);
-            console.log(createdEvents);
-        });
-
-        let createdMessage = reply.content.replace('Creating your events...', `Events created: ${eventStrings}`)
-        return await reply.edit(createdMessage);
+        try {
+            await Authenticator.outlook.performRequest(msg.guild, async (token) => {
+                let calendarInterface = new CalendarInterface(token)
+                let eventCreator = new EventCreator(calendarInterface);
+                let createdEvents = await eventCreator.create(msg, eventDescription, style);
+                console.log(createdEvents);
+            });
+    
+            let createdMessage = reply.content.replace('Creating your events...', `Events created: ${eventStrings}`)
+            return await reply.edit(createdMessage);    
+        }
+        catch (e) {
+            return await reply.edit(`Failed to create events:\n${e}`)
+        }
     }
 }

@@ -73,6 +73,10 @@ module.exports = class OAuthAuthenticator {
         let guildExtension = /** @type commando.GuildExtension */ (guild);
         let rawToken = guildExtension.settings.get(this.tokenSettingName);
 
+        if (!rawToken) {
+            return Promise.reject(new Error(`Token unavailable for ${this.authProvider.name}, ask an admin to run the **auth** command.`))
+        }
+
         let token = await this.authProvider.accessToken(rawToken);
 
         try {

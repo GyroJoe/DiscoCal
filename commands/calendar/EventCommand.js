@@ -23,8 +23,7 @@ module.exports = class EventCommand extends commando.Command {
             await Authenticator.outlook.performRequest(msg.guild, async (token) => {
                 let calendarInterface = new CalendarInterface(token)
                 let eventCreator = new EventCreator(calendarInterface);
-                let createdEvents = await eventCreator.create(msg, eventDescription, style);
-                console.log(createdEvents);
+                await eventCreator.create(msg, eventDescription, style);
             });
     
             let createdMessage = reply.content.replace('Creating your events...', `Events created: ${eventStrings}`)

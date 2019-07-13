@@ -37,7 +37,9 @@ class EventCreator {
 			let end = date.end || date.start;
 			let adjustedEnd = date.isAllDay ? moment(end).add(1, 'days').toDate() : end;
 
-			promises.push(this.calendarInterface.CreateEvent(subject, date.start, adjustedEnd, date.isAllDay, "Pacific Standard Time", msg.content));
+			let body = `@${msg.author.username}: ${msg.content}`;
+
+			promises.push(this.calendarInterface.CreateEvent(subject, date.start, adjustedEnd, date.isAllDay, "Pacific Standard Time", body));
 		});
 		
 		return Promise.all(promises)

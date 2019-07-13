@@ -16,6 +16,12 @@
             "request": "launch",
             "name": "Launch Bot",
             "program": "${workspaceFolder}/bot.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Test",
+            "program": "${workspaceRoot}/node_modules/jest/bin/jest.js",
         }
     ]
 }

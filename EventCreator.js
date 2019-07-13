@@ -33,11 +33,11 @@ class EventCreator {
 				break;
 		}
 
-		eventDescription.dates.forEach(element => {
-			let end = element.end || element.start;
-			let adjustedEnd = moment(end).add(1, 'days').toDate();
+		eventDescription.dates.forEach(date => {
+			let end = date.end || date.start;
+			let adjustedEnd = date.isAllDay ? moment(end).add(1, 'days').toDate() : end;
 
-			promises.push(this.calendarInterface.CreateEvent(subject, element.start, adjustedEnd, element.isAllDay, "Pacific Standard Time", msg.content));
+			promises.push(this.calendarInterface.CreateEvent(subject, date.start, adjustedEnd, date.isAllDay, "Pacific Standard Time", msg.content));
 		});
 		
 		return Promise.all(promises)

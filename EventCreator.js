@@ -20,16 +20,21 @@ class EventCreator {
 	 * @param {EventCreator.Style} style
 	 */
 	async create(msg, eventDescription, style) {
-		let promises = []
+		let promises = [];
+
+		let name = msg.author.username;
+		if (msg.member && msg.member.nickname) {
+			name = msg.member.nickname;
+		}
 
 		let subject;
-		switch(style) {
+		switch (style) {
 			case EventCreator.Style.FULL:
 				subject = eventDescription.title;
 				break;
 
 			case EventCreator.Style.OUT:
-				subject = `${msg.author.username} out`;
+				subject = `${name} out`;
 				break;
 		}
 
@@ -37,7 +42,7 @@ class EventCreator {
 			let end = date.end || date.start;
 			let adjustedEnd = date.isAllDay ? moment(end).add(1, 'days').toDate() : end;
 
-			let body = `@${msg.author.username}: ${msg.content}`;
+			let body = `@${name}: ${msg.content}`;
 
 			promises.push(this.calendarInterface.CreateEvent(subject, date.start, adjustedEnd, date.isAllDay, "Pacific Standard Time", body));
 		});

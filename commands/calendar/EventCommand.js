@@ -21,16 +21,18 @@ module.exports = class EventCommand extends commando.Command {
 
         try {
             await Authenticator.outlook.performRequest(msg.guild, async (token) => {
-                let calendarInterface = new CalendarInterface(token)
+                let calendarInterface = new CalendarInterface(token);
                 let eventCreator = new EventCreator(calendarInterface);
                 await eventCreator.create(msg, eventDescription, style);
             });
     
-            let createdMessage = reply.content.replace('Creating your events...', `Events created: ${eventStrings}`)
+            let createdMessage = reply.content.replace('Creating your events...', `Events created: ${eventStrings}`);
             return await reply.edit(createdMessage);    
         }
         catch (e) {
-            return await reply.edit(`Failed to create events:\n${e}`)
+            console.error(e);
+
+            return await reply.edit(`Failed to create events:\n${e}`);
         }
     }
 }

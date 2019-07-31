@@ -1,9 +1,11 @@
 "use strict";
 
 const chrono = require('chrono-node');
+
+const OrderFixupRefiner = require('../calendar/OrderFixupRefiner');
 const OrdinalDateParser = require('../calendar/OrdinalDateParser');
 const RelativeWeekdayRefiner = require('../calendar/RelativeWeekdayRefiner');
-const OrderFixupRefiner = require('../calendar/OrderFixupRefiner');
+const TodayPastNotFutureReinger = require('../calendar/TodayPastNotFutureRefiner');
 
 class TextDateExtractor {
     constructor() {
@@ -22,6 +24,7 @@ class TextDateExtractor {
 
         options.refiners.unshift(new OrderFixupRefiner(options.parsers));
         options.refiners.push(new RelativeWeekdayRefiner());
+        options.refiners.push(new TodayPastNotFutureReinger());
 
         this.chrono = new chrono.Chrono(options);
     }

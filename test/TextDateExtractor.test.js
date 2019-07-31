@@ -116,6 +116,13 @@ test('multi-parser match date ambiguity', () => {
     ]);
 });
 
+test('today current not future', () => {
+    var message = { Date: "30-Jul-19 8:00 PM", Content: "7/30 Iffy tonight" };
+    validateMessage(message, "Iffy", [
+        { isAllDay: true, start: { m: 7, d: 30, y: 2019 } },
+    ]);
+});
+
 function validateMessage(message, title, expectedDates) {
     var results = extractor.extract(message.Content, Date.parse(message.Date));
 

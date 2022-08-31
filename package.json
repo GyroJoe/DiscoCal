@@ -18,7 +18,7 @@
 		"discord.js-commando": "^0.10.0",
 		"express": "^4.17.1",
 		"moment": "^2.27.0",
-		"moment-timezone": "^0.5.31",
+		"moment-timezone": "^0.5.35",
 		"ms-rest-azure": "^2.6.0",
 		"simple-oauth2": "^2.2.1",
 		"sqlite": "^3.0.3"
